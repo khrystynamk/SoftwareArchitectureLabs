@@ -24,21 +24,21 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1c\x66\x61\x63\x61\x64\x65_logging_service.proto\x12\x0b\x66\x61\x63\x61\x64\x65_gRPC\"!\n\x11PutMessageRequest\x12\x0c\n\x04text\x18\x01 \x01(\t\"@\n\x12PutMessageResponse\x12\x0e\n\x06status\x18\x01 \x01(\x05\x12\x0c\n\x04uuid\x18\x02 \x01(\t\x12\x0c\n\x04text\x18\x03 \x01(\t\"\x14\n\x12GetMessagesRequest\"\'\n\x13GetMessagesResponse\x12\x10\n\x08messages\x18\x01 \x03(\t2\xaa\x01\n\x07Logging\x12M\n\nPutMessage\x12\x1e.facade_gRPC.PutMessageRequest\x1a\x1f.facade_gRPC.PutMessageResponse\x12P\n\x0bGetMessages\x12\x1f.facade_gRPC.GetMessagesRequest\x1a .facade_gRPC.GetMessagesResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1c\x66\x61\x63\x61\x64\x65_logging_service.proto\x12\x0b\x66\x61\x63\x61\x64\x65_gRPC\"/\n\x11LogMessageRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\t\x12\x0c\n\x04text\x18\x02 \x01(\t\"@\n\x12LogMessageResponse\x12\x0e\n\x06status\x18\x01 \x01(\x05\x12\x0c\n\x04uuid\x18\x02 \x01(\t\x12\x0c\n\x04text\x18\x03 \x01(\t\"\x14\n\x12GetMessagesRequest\"\'\n\x13GetMessagesResponse\x12\x10\n\x08messages\x18\x01 \x03(\t2\xaa\x01\n\x07Logging\x12M\n\nLogMessage\x12\x1e.facade_gRPC.LogMessageRequest\x1a\x1f.facade_gRPC.LogMessageResponse\x12P\n\x0bGetMessages\x12\x1f.facade_gRPC.GetMessagesRequest\x1a .facade_gRPC.GetMessagesResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'facade_logging_service_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_PUTMESSAGEREQUEST']._serialized_start=45
-  _globals['_PUTMESSAGEREQUEST']._serialized_end=78
-  _globals['_PUTMESSAGERESPONSE']._serialized_start=80
-  _globals['_PUTMESSAGERESPONSE']._serialized_end=144
-  _globals['_GETMESSAGESREQUEST']._serialized_start=146
-  _globals['_GETMESSAGESREQUEST']._serialized_end=166
-  _globals['_GETMESSAGESRESPONSE']._serialized_start=168
-  _globals['_GETMESSAGESRESPONSE']._serialized_end=207
-  _globals['_LOGGING']._serialized_start=210
-  _globals['_LOGGING']._serialized_end=380
+  _globals['_LOGMESSAGEREQUEST']._serialized_start=45
+  _globals['_LOGMESSAGEREQUEST']._serialized_end=92
+  _globals['_LOGMESSAGERESPONSE']._serialized_start=94
+  _globals['_LOGMESSAGERESPONSE']._serialized_end=158
+  _globals['_GETMESSAGESREQUEST']._serialized_start=160
+  _globals['_GETMESSAGESREQUEST']._serialized_end=180
+  _globals['_GETMESSAGESRESPONSE']._serialized_start=182
+  _globals['_GETMESSAGESRESPONSE']._serialized_end=221
+  _globals['_LOGGING']._serialized_start=224
+  _globals['_LOGGING']._serialized_end=394
 # @@protoc_insertion_point(module_scope)

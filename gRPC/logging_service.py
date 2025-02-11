@@ -1,7 +1,6 @@
 import grpc
 import facade_logging_service_pb2_grpc
 import facade_logging_service_pb2
-import uuid
 
 from concurrent import futures
 
@@ -9,22 +8,20 @@ added_messages = {}
 
 
 class LoggingServiceServicer(facade_logging_service_pb2_grpc.LoggingServicer):
-    def PutMessage(self, request, context):
-        if request.text in added_messages.values():
-            added_uuid = added_messages.get(request.text, None)
-            return facade_logging_service_pb2.PutMessageResponse(
-                status=403, uuid=added_uuid, text="message has been already added"
+    def LogMessage(self, request, context):
+        if request.uuid in added_messages.keys():  # deduplication ?
+            return facade_logging_service_pb2.LogMessageResponse(
+                status=400, uuid=request.uuid, text="message has been already added"
             )
 
-        message_uuid = str(uuid.uuid4())
-        added_messages[message_uuid] = request.text
-        return facade_logging_service_pb2.PutMessageResponse(
-            status=200, uuid=message_uuid, text=request.text
+        added_messages[request.uuid] = request.text
+        return facade_logging_service_pb2.LogMessageResponse(
+            status=200, uuid=request.uuid, text=request.text
         )
 
     def GetMessages(self, request, context):
         return facade_logging_service_pb2.GetMessagesResponse(
-            messages=added_messages.values()
+            messages=list(added_messages.values())
         )
 
 

@@ -1,0 +1,13 @@
+@BASE_URL = http://localhost:8080/facade_service
+@QUERY = This is a message
+
+### GET request
+GET {{BASE_URL}}
+
+### POST request
+POST {{BASE_URL}}
+Content-Type: application/json
+
+{
+  "text": "{{QUERY}}"
+}

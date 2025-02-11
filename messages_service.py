@@ -4,5 +4,5 @@ app = FastAPI()
 
 
 @app.get("/messages")
-async def messages():
+def messages():
     return "not implemented yet"

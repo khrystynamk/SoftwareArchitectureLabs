@@ -34,10 +34,10 @@ class LoggingStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.PutMessage = channel.unary_unary(
-                '/facade_gRPC.Logging/PutMessage',
-                request_serializer=facade__logging__service__pb2.PutMessageRequest.SerializeToString,
-                response_deserializer=facade__logging__service__pb2.PutMessageResponse.FromString,
+        self.LogMessage = channel.unary_unary(
+                '/facade_gRPC.Logging/LogMessage',
+                request_serializer=facade__logging__service__pb2.LogMessageRequest.SerializeToString,
+                response_deserializer=facade__logging__service__pb2.LogMessageResponse.FromString,
                 _registered_method=True)
         self.GetMessages = channel.unary_unary(
                 '/facade_gRPC.Logging/GetMessages',
@@ -49,7 +49,7 @@ class LoggingStub(object):
 class LoggingServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def PutMessage(self, request, context):
+    def LogMessage(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -64,10 +64,10 @@ class LoggingServicer(object):
 
 def add_LoggingServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'PutMessage': grpc.unary_unary_rpc_method_handler(
-                    servicer.PutMessage,
-                    request_deserializer=facade__logging__service__pb2.PutMessageRequest.FromString,
-                    response_serializer=facade__logging__service__pb2.PutMessageResponse.SerializeToString,
+            'LogMessage': grpc.unary_unary_rpc_method_handler(
+                    servicer.LogMessage,
+                    request_deserializer=facade__logging__service__pb2.LogMessageRequest.FromString,
+                    response_serializer=facade__logging__service__pb2.LogMessageResponse.SerializeToString,
             ),
             'GetMessages': grpc.unary_unary_rpc_method_handler(
                     servicer.GetMessages,
@@ -86,7 +86,7 @@ class Logging(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def PutMessage(request,
+    def LogMessage(request,
             target,
             options=(),
             channel_credentials=None,
@@ -99,9 +99,9 @@ class Logging(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/facade_gRPC.Logging/PutMessage',
-            facade__logging__service__pb2.PutMessageRequest.SerializeToString,
-            facade__logging__service__pb2.PutMessageResponse.FromString,
+            '/facade_gRPC.Logging/LogMessage',
+            facade__logging__service__pb2.LogMessageRequest.SerializeToString,
+            facade__logging__service__pb2.LogMessageResponse.FromString,
             options,
             channel_credentials,
             insecure,

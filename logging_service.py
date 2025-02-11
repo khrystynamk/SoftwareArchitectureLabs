@@ -7,17 +7,17 @@ all_messages = {}
 
 @app.get("/log")
 def list_messages():
-    return all_messages.values()
+    return list(all_messages.values())
 
 
 @app.post("/log")
 async def logging(message: Message) -> dict:
     mes_uuid = message.mes_uuid
     mes_text = message.text
-    if mes_text in all_messages.values():
+    if mes_uuid in all_messages.keys():  # deduplication ?
         return Response(
             media_type="application/json",
-            status_code=403,
+            status_code=400,
             content="message has been already added and exists",
         )
     all_messages[mes_uuid] = mes_text
