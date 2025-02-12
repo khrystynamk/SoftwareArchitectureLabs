@@ -14,11 +14,12 @@ def list_messages():
 async def logging(message: Message) -> dict:
     mes_uuid = message.mes_uuid
     mes_text = message.text
-    if mes_uuid in all_messages.keys():  # deduplication ?
+    if mes_uuid in all_messages.keys():
         return Response(
             media_type="application/json",
             status_code=400,
             content="message has been already added and exists",
         )
     all_messages[mes_uuid] = mes_text
+    print(f"The following message has been added: {mes_text}")
     return Response(media_type="application/json", status_code=200)

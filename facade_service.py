@@ -48,9 +48,7 @@ async def post_facade(request: Request) -> dict:
 
     response = await send_retry_request(post_request, LOGGING_URL, serialized_message)
     return {
-        "status": response.status_code,
-        "uuid": message.mes_uuid,
-        "text": message.text,
+        "status": response.status_code
     }
 
 

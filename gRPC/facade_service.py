@@ -48,7 +48,7 @@ async def log_message(text: str) -> dict:
     )
     response = stub.LogMessage(request_message)
 
-    return {"status": response.status, "uuid": response.uuid, "text": response.text}
+    return {"status": response.status}
 
 
 @app.post("/facade_service")
