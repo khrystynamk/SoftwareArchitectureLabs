@@ -23,7 +23,7 @@ class LoggingServiceServicer(facade_logging_service_pb2_grpc.LoggingServicer):
 
     def GetMessages(self, request, context):
         return facade_logging_service_pb2.GetMessagesResponse(
-            messages=list(added_messages.values())
+            messages="\n".join(list(added_messages.values()))
         )
 
 

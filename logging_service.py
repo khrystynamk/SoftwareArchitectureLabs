@@ -7,7 +7,7 @@ all_messages = {}
 
 @app.get("/log")
 def list_messages():
-    return list(all_messages.values())
+    return "\n".join(list(all_messages.values()))
 
 
 @app.post("/log")

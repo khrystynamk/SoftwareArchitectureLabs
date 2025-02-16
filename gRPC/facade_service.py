@@ -68,7 +68,7 @@ async def fetch_messages() -> dict:
     response = stub.GetMessages(request)
 
     return {
-        "logging_response": list(response.messages),
+        "logging_response": response.messages,
         "messages_response": messages_response.json(),
     }
 
