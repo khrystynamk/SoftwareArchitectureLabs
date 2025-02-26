@@ -39,12 +39,12 @@ def clients_wrapper():
     consumer_thread2 = threading.Thread(target=consume, args=(client, QUEUE_NAME))
 
     producer_thread.start()
-    # consumer_thread1.start()
-    # consumer_thread2.start()
+    consumer_thread1.start()
+    consumer_thread2.start()
 
     producer_thread.join()
-    # consumer_thread1.join()
-    # consumer_thread2.join()
+    consumer_thread1.join()
+    consumer_thread2.join()
 
     queue = client.get_queue(QUEUE_NAME).blocking()
     queue.destroy()
