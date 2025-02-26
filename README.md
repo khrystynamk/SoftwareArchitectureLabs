@@ -24,7 +24,7 @@ cd path/to/hazelcast
 Run the following command in three separate terminals:
 
 ```sh
-bin/hz start
+bin/hz start -c path/to/hazelcast.xml
 ```
 
 ### Terminal Output for Each Node
@@ -132,5 +132,25 @@ As the documentation of Hazelcast claims:
 
 ## Task 8: Bounded Queue
 
+- **Queue Configuration:**
+  To set the number of elements in the queue, I used the `max-size` element in the `hazelcast.xml` configuration file and set it to 10.
+
+  ```xml
+  <queue name="bounded_queue">
+      <max-size>10</max-size>
+  </queue>
+  ```
+- **Implementation:** The implementation for this task can be found in the file `bounded_queue.py`.
+- **Producer-Consumer Behavior:** Two clients read values from the queue. The producer adds elements to the queue, and the consumers take elements from the queue.
+
+![Producer Consumer](img/producer_consumer.png)
+
+While the operations seem to happen one by one, the appearance of simultaneous actions can be misleading due to the delays caused by the print function.
+
+- **Only Producer**: What happens if there are no consumers?
+
+![Producer](img/producer.png)
+
+If there are no consumers, the queue will only be filled with 10 elements. The producer will be blocked until at least one element is consumed, ensuring that the queue size does not exceed the set limit.
 
 ---
