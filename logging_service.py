@@ -35,5 +35,5 @@ async def logging(message: Message) -> dict:
             content="Message has been already added and exists",
         )
     messages_map.put(mes_uuid, mes_text)
-    print(f"The following message has been added: {mes_text}")
+    print(f"The following message has been added to Logging Instance {service_index}: {mes_text}")
     return Response(media_type="application/json", status_code=200)
