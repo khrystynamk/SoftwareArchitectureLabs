@@ -43,6 +43,21 @@ All messages are successfully retrieved from the Hazelcast distributed map.
 ### 4. Shutdown One/Two Instances of Logging Service (With Hazelcast Nodes) and Verify Data Availability
 
 Even after shutting down two logging service instances along with their corresponding nodes, all messages remain accessible in the distributed map.
+The processes were killed using the following command
+
+```bash
+pkill -f <process_name_attr>
+```
+
+For example:
+
+```bash
+pkill -f "java .*hazelcast.*5701"
+pkill -f "java .*hazelcast.*5702"
+
+pkill -f "uvicorn logging_service:app --host 127.0.0.1 --port 8081"
+pkill -f "uvicorn logging_service:app --host 127.0.0.1 --port 8082"
+```
 
 #### Logs After Shutdown:
 ![Logs with shutdown](img/two_services_shutdown.png)
