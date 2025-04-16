@@ -7,7 +7,7 @@ load_dotenv()
 
 SERVICES = {
     "logging-service": os.getenv("LOGGING_SERVICES", "").split(","),
-    "messages-service": [os.getenv("MESSAGES_URL", "")],
+    "messages-service": os.getenv("MESSAGE_SERVICES", "").split(","),
 }
 
 

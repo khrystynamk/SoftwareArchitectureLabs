@@ -35,7 +35,8 @@ start_services() {
     SERVICE_INSTANCE=2 python3 -m uvicorn logging_service:app --host 127.0.0.1 --port 8083 &
 
     # messages
-    python3 -m uvicorn messages_service:app --host 127.0.0.1 --port 8084 &
+    python3 -m uvicorn messages_service:app --host 127.0.0.1 --port 8101 &
+    python3 -m uvicorn messages_service:app --host 127.0.0.1 --port 8102 &
 }
 
 trap "echo 'Shutting down...'; stop_hazelcast_nodes; exit 0" SIGINT SIGTERM

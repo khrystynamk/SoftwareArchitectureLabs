@@ -1,12 +1,15 @@
 import httpx
 import time
 import os
+import json
 import random
+import socket
 
 from message import Message
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.encoders import jsonable_encoder
+from confluent_kafka import Producer
 
 app = FastAPI()
 load_dotenv()
@@ -14,6 +17,15 @@ load_dotenv()
 CONFIG_SERVER_URL = os.getenv("CONFIG_SERVER_URL")
 MAX_RETRIES = int(os.getenv("MAX_RETRIES"))
 RETRY_DELAY = int(os.getenv("RETRY_DELAY"))
+KAFKA_SERVERS = os.getenv("KAFKA_SERVERS")
+KAFKA_TOPIC = os.getenv("KAFKA_TOPIC", "messages")
+
+producer = Producer(
+    {
+        "bootstrap.servers": KAFKA_SERVERS,
+        "client.id": socket.gethostname(),
+    }
+)
 
 
 async def fetch_service_instances(service_name: str):
@@ -41,7 +53,7 @@ async def send_request_to_service(service_urls, request_func, *args, **kwargs):
             async with httpx.AsyncClient() as client:
                 response = await request_func(client, service_url, *args, **kwargs)
                 return response
-        except httpx.RequestError:
+        except httpx.HTTPError:
             print(f"Attempt {attempt}: Failed to reach {service_url}, retrying...")
             time.sleep(RETRY_DELAY)
     raise HTTPException(status_code=503, detail="All retry attempts failed.")
@@ -69,8 +81,20 @@ async def post_facade(request: Request):
     response = await send_request_to_service(
         service_instances, post_request, serialized_message
     )
+    message_bytes = json.dumps(serialized_message).encode("utf-8")
 
-    return {"status": response.status_code}
+    try:
+        producer.produce(KAFKA_TOPIC, message_bytes)
+        producer.flush()  # ensure the message is sent
+        return {
+            "kafka_status": "Message produced successfully",
+            "topic": KAFKA_TOPIC,
+            "logging_status": response.status_code,
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to produce message: {str(e)}"
+        )
 
 
 @app.get("/facade_service")
