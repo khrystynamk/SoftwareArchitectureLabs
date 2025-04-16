@@ -2,7 +2,7 @@
 
 BASE_PATH="$(pwd)"
 HAZELCAST_PATH="$BASE_PATH/hazelcast-5.5.0"
-HAZELCAST_CONFIG_PATH="$BASE_PATH/hazelcast.xml"
+HAZELCAST_CONFIG_PATH="$BASE_PATH/hazelcast-5.5.0/config/hazelcast.xml"
 
 start_hazelcast_nodes() {
     echo "Starting Hazelcast nodes..."
@@ -10,6 +10,7 @@ start_hazelcast_nodes() {
     bin/hz start -c "$HAZELCAST_CONFIG_PATH" &
     bin/hz start -c "$HAZELCAST_CONFIG_PATH" &
     bin/hz start -c "$HAZELCAST_CONFIG_PATH" &
+
     sleep 5
 }
 
@@ -23,18 +24,18 @@ start_services() {
     echo "Starting the services..."
 
     # facade
-    uvicorn facade_service:app --host 127.0.0.1 --port 8000 &
+    python3 -m uvicorn facade_service:app --host 127.0.0.1 --port 8000 &
 
     # config
-    uvicorn config_server:app --host 127.0.0.1 --port 8001 &
+    python3 -m uvicorn config_server:app --host 127.0.0.1 --port 8001 &
 
     # logging
-    SERVICE_INSTANCE=0 uvicorn logging_service:app --host 127.0.0.1 --port 8081 &
-    SERVICE_INSTANCE=1 uvicorn logging_service:app --host 127.0.0.1 --port 8082 &
-    SERVICE_INSTANCE=2 uvicorn logging_service:app --host 127.0.0.1 --port 8083 &
+    SERVICE_INSTANCE=0 python3 -m uvicorn logging_service:app --host 127.0.0.1 --port 8081 &
+    SERVICE_INSTANCE=1 python3 -m uvicorn logging_service:app --host 127.0.0.1 --port 8082 &
+    SERVICE_INSTANCE=2 python3 -m uvicorn logging_service:app --host 127.0.0.1 --port 8083 &
 
     # messages
-    uvicorn messages_service:app --host 127.0.0.1 --port 8084 &
+    python3 -m uvicorn messages_service:app --host 127.0.0.1 --port 8084 &
 }
 
 trap "echo 'Shutting down...'; stop_hazelcast_nodes; exit 0" SIGINT SIGTERM
