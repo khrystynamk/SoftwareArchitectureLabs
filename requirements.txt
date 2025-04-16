@@ -1,0 +1,6 @@
+fastapi==0.115.12
+hazelcast_python_client==5.5.0
+httpx==0.13.3
+pydantic==2.11.3
+python-dotenv==1.1.0
+Requests==2.32.3

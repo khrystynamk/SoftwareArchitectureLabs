@@ -9,7 +9,7 @@ from fastapi import FastAPI, Request, HTTPException
 from fastapi.encoders import jsonable_encoder
 
 app = FastAPI()
-load_dotenv(dotenv_path="./.env")
+load_dotenv()
 
 CONFIG_SERVER_URL = os.getenv("CONFIG_SERVER_URL")
 MAX_RETRIES = int(os.getenv("MAX_RETRIES"))
@@ -21,9 +21,10 @@ async def fetch_service_instances(service_name: str):
         response = await client.get(f"{CONFIG_SERVER_URL}/{service_name}")
         if response.status_code == 200:
             return response.json()["instances"]
-        raise HTTPException(
-            status_code=500, detail=f"Failed to fetch {service_name} instances."
-        )
+        else:
+            raise HTTPException(
+                status_code=500, detail=f"Failed to fetch {service_name} instances."
+            )
 
 
 async def send_request_to_service(service_urls, request_func, *args, **kwargs):
@@ -38,7 +39,8 @@ async def send_request_to_service(service_urls, request_func, *args, **kwargs):
         service_url = service_urls.pop(0)
         try:
             async with httpx.AsyncClient() as client:
-                return await request_func(client, service_url, *args, **kwargs)
+                response = await request_func(client, service_url, *args, **kwargs)
+                return response
         except httpx.RequestError:
             print(f"Attempt {attempt}: Failed to reach {service_url}, retrying...")
             time.sleep(RETRY_DELAY)
@@ -46,9 +48,10 @@ async def send_request_to_service(service_urls, request_func, *args, **kwargs):
 
 
 async def post_request(client: httpx.AsyncClient, url: str, json_data: dict):
-    return await client.post(
+    response = await client.post(
         f"{url}/", json=json_data, headers={"Content-Type": "application/json"}
     )
+    return response
 
 
 async def get_request(client: httpx.AsyncClient, url: str):
