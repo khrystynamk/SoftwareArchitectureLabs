@@ -4,8 +4,8 @@ from fastapi import FastAPI, HTTPException
 app = FastAPI()
 
 SERVICES = {
-    "logging-service": os.getenv("LOGGING_SERVICES").split(","),
-    "messages-service": [os.getenv("MESSAGES_URL")],
+    "logging-service": os.getenv("LOGGING_SERVICES", "").split(","),
+    "messages-service": [os.getenv("MESSAGES_URL", "")],
 }
 
 @app.get("/{service_name}")
