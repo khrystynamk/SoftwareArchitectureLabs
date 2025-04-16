@@ -1,8 +1,8 @@
 #!/bin/bash
 
-HAZELCAST_PATH="/Users/khrystynamysak/Downloads/hazelcast-5.5.0"
-HAZELCAST_CONFIG_PATH="/Users/khrystynamysak/Documents/UCU APPS/APPS_SoftwareArchitecture/SoftwareArchitectureLabs/hazelcast.xml"
-BASE_PATH="/Users/khrystynamysak/Documents/UCU APPS/APPS_SoftwareArchitecture/SoftwareArchitectureLabs"
+BASE_PATH="$(pwd)"
+HAZELCAST_PATH="$BASE_PATH/hazelcast-5.5.0"
+HAZELCAST_CONFIG_PATH="$BASE_PATH/hazelcast.xml"
 
 start_hazelcast_nodes() {
     echo "Starting Hazelcast nodes..."
