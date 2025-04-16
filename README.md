@@ -8,6 +8,12 @@ This repository contains an improved implementation of a basic microservices arc
 
 ### 1. Start Three Instances of Logging-Service (with Three Hazelcast Nodes)
 
+You can start the system using the `bash` script, specifically `start_services.sh`. But before that you might need to add the `hazelcast-5.5.0` folder to workspace.
+
+```
+./start_services.sh
+```
+
 The system initializes three instances of the logging service, each running on a separate Hazelcast node.
 
 #### Nodes:
