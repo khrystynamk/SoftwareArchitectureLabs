@@ -1,5 +1,6 @@
 import time
 import os
+import json
 
 from fastapi import FastAPI
 from threading import Thread
@@ -10,6 +11,7 @@ app = FastAPI()
 load_dotenv()
 KAFKA_SERVERS = os.getenv("KAFKA_SERVERS")
 KAFKA_TOPIC = os.getenv("KAFKA_TOPIC", "messages")
+SERVICE_IDX = int(os.getenv("MES_SERVICE_INSTANCE"))
 
 messages = []
 
@@ -31,18 +33,16 @@ def consume_messages():
         if msg is None:
             continue
         if msg.error():
-            print("Consumer error: {}".format(msg.error()))
+            print(f"Consumer error: {msg.error()}")
             continue
 
-        value = msg.value().decode("utf-8")
-        print("Received message: {}".format(value))
-        messages.append(value)
-
+        value = msg.value()
+        decoded = json.loads(value.decode("utf-8"))
+        text = decoded.get("text")
+        print(f"Service instance {SERVICE_IDX} received a message: {text}")
+        messages.append(text)
 
 Thread(target=consume_messages, daemon=True).start()
-
-print(f"PID: {os.getpid()}")
-
 
 @app.get("/")
 def send_message():

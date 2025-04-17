@@ -10,7 +10,7 @@ load_dotenv()
 node_addresses = os.getenv(
     "HZ_NODES", "127.0.0.1:5701,127.0.0.1:5702,127.0.0.1:5703"
 ).split(",")
-SERVICE_IDX = int(os.getenv("SERVICE_INSTANCE"))
+SERVICE_IDX = int(os.getenv("LOG_SERVICE_INSTANCE"))
 hz_node = node_addresses[SERVICE_IDX]
 
 hazelcast_client = hazelcast.HazelcastClient(

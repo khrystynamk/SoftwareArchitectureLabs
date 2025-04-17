@@ -1,5 +1,5 @@
 @BASE_URL = http://localhost:8000/facade_service
-@QUERY = msg1
+@QUERY = msg0
 
 ### GET request
 GET {{BASE_URL}}
