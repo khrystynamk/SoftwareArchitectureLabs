@@ -1,4 +1,4 @@
-# SoftwareArchitectureLabs
+# SoftwareArchitectureLabs: Message Queues
 
 This repository contains an enhanced implementation of a basic microservices architecture, integrating a Hazelcast distributed map and Kafka message queues.
 
