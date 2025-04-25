@@ -10,33 +10,30 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.encoders import jsonable_encoder
 from confluent_kafka import Producer
+from prerequisites import (
+    register_service,
+    deregister_service,
+    discover_service,
+    get_key_value_item,
+)
 
 app = FastAPI()
 load_dotenv()
 
-CONFIG_SERVER_URL = os.getenv("CONFIG_SERVER_URL")
 MAX_RETRIES = int(os.getenv("MAX_RETRIES"))
 RETRY_DELAY = int(os.getenv("RETRY_DELAY"))
-KAFKA_SERVERS = os.getenv("KAFKA_SERVERS")
-KAFKA_TOPIC = os.getenv("KAFKA_TOPIC", "messages")
-
+SERVICE_IDX = os.getenv("FACADE_INSTANCE")
+PORT = os.getenv("PORT")
+HOST = os.getenv("HOST")
+register_service("facade-service", SERVICE_IDX, PORT, HOST)
+data = get_key_value_item("kafka/nodes")
+node_addresses = data.decode()
 producer = Producer(
     {
-        "bootstrap.servers": KAFKA_SERVERS,
+        "bootstrap.servers": node_addresses,
         "client.id": socket.gethostname(),
     }
 )
-
-
-async def fetch_service_instances(service_name: str):
-    async with httpx.AsyncClient() as client:
-        response = await client.get(f"{CONFIG_SERVER_URL}/{service_name}")
-        if response.status_code == 200:
-            return response.json()["instances"]
-        else:
-            raise HTTPException(
-                status_code=500, detail=f"Failed to fetch {service_name} instances."
-            )
 
 
 async def send_request_to_service(service_urls, request_func, *args, **kwargs):
@@ -67,6 +64,7 @@ async def post_request(client: httpx.AsyncClient, url: str, json_data: dict):
 
 
 async def get_request(client: httpx.AsyncClient, url: str):
+    print(f"---------------------Sending GET request to {url}")
     response = await client.get(f"{url}/")
     return response.json()
 
@@ -77,18 +75,20 @@ async def post_facade(request: Request):
     message = Message(text=body.get("text"))
     serialized_message = jsonable_encoder(message)
 
-    service_instances = await fetch_service_instances("logging-service")
+    service_instances = discover_service("logging-service")
     response = await send_request_to_service(
         service_instances, post_request, serialized_message
     )
     message_bytes = json.dumps(serialized_message).encode("utf-8")
 
     try:
-        producer.produce(KAFKA_TOPIC, message_bytes)
+        topic = get_key_value_item("kafka/topic")
+        topic = topic.decode()
+        producer.produce(topic, message_bytes)
         producer.flush()  # ensure the message is sent
         return {
             "kafka_status": "Message produced successfully",
-            "topic": KAFKA_TOPIC,
+            "topic": topic,
             "logging_status": response.status_code,
         }
     except Exception as e:
@@ -99,12 +99,12 @@ async def post_facade(request: Request):
 
 @app.get("/facade_service")
 async def get_facade():
-    logging_service_instances = await fetch_service_instances("logging-service")
+    logging_service_instances = discover_service("logging-service")
     response_logging = await send_request_to_service(
         logging_service_instances, get_request
     )
 
-    messages_service_instances = await fetch_service_instances("messages-service")
+    messages_service_instances = discover_service("messages-service")
     response_messages = await send_request_to_service(
         messages_service_instances, get_request
     )
@@ -113,3 +113,7 @@ async def get_facade():
         "logging_response": response_logging,
         "messages_response": response_messages,
     }
+
+@app.on_event("shutdown")
+def shutdown_event():
+    deregister_service(f"facade-service-{SERVICE_IDX}")

@@ -1,3 +1,4 @@
+confluent_kafka==2.4.0
 fastapi==0.115.12
 hazelcast_python_client==5.5.0
 httpx==0.13.3
