@@ -64,7 +64,6 @@ async def post_request(client: httpx.AsyncClient, url: str, json_data: dict):
 
 
 async def get_request(client: httpx.AsyncClient, url: str):
-    print(f"---------------------Sending GET request to {url}")
     response = await client.get(f"{url}/")
     return response.json()
 
@@ -100,11 +99,13 @@ async def post_facade(request: Request):
 @app.get("/facade_service")
 async def get_facade():
     logging_service_instances = discover_service("logging-service")
+    print("Discovered logging-service instances:", logging_service_instances)
     response_logging = await send_request_to_service(
         logging_service_instances, get_request
     )
 
     messages_service_instances = discover_service("messages-service")
+    print("Discovered logging-service instances:", messages_service_instances)
     response_messages = await send_request_to_service(
         messages_service_instances, get_request
     )
@@ -113,6 +114,7 @@ async def get_facade():
         "logging_response": response_logging,
         "messages_response": response_messages,
     }
+
 
 @app.on_event("shutdown")
 def shutdown_event():

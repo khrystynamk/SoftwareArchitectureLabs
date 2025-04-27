@@ -50,10 +50,12 @@ def consume_messages():
 
 Thread(target=consume_messages, daemon=True).start()
 
+
 @app.get("/")
 def send_message():
     print("Messages:", messages)
     return messages
+
 
 @app.on_event("shutdown")
 def shutdown_event():

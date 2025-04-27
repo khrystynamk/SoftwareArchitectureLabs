@@ -17,16 +17,18 @@ register_service("logging-service", SERVICE_IDX, PORT, HOST)
 cluster_name = get_key_value_item("hazelcast/cluster_name")
 data = get_key_value_item("hazelcast/nodes")
 node_addresses = data.decode()
-hz_node = node_addresses.strip(",")[SERVICE_IDX]
+hz_node = node_addresses.split(",")[SERVICE_IDX]
 hz_client = hazelcast.HazelcastClient(
     cluster_name=cluster_name.decode(),
     cluster_members=[hz_node],
 )
+
 messages_map = hz_client.get_map("messages").blocking()
 
 
 @app.get("/")
 def list_messages():
+    print("\n".join(messages_map.values()))
     return "\n".join(messages_map.values())
 
 
@@ -46,6 +48,7 @@ async def logging(message: Message):
         f"The following message has been added to Logging Instance {SERVICE_IDX}: {mes_text}"
     )
     return {"status": 200}
+
 
 @app.on_event("shutdown")
 def shutdown_event():

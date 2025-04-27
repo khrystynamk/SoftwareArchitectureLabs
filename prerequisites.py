@@ -1,4 +1,5 @@
 import consul
+import httpx
 
 
 def register_service(service_name, service_id, port, address):
@@ -27,6 +28,17 @@ def discover_service(service_name):
         f"http://{service['Service']['Address']}:{service['Service']['Port']}"
         for service in services
     ]
+
+
+# async def discover_service(service_name: str):
+#     async with httpx.AsyncClient() as client:
+#         response = await client.get(f"http://localhost:8500/v1/health/service/{service_name}?passing=true")
+#         data = response.json()
+#         service_urls = [
+#             f"http://{entry['Service']['Address']}:{entry['Service']['Port']}"
+#             for entry in data
+#         ]
+#         return service_urls
 
 
 def add_key_value_item(key, value):
